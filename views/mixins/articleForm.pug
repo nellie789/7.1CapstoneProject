@@ -1,0 +1,18 @@
+mixin articleForm(article, buttonText, saveUrl, cancelUrl, deleteUrl)
+    form(action=saveUrl method="post")
+        div.input-container.wide
+            label(for="title").form-label Title
+            input(type="text" name="title" id="title" required=true placeholder="Song Title" value=article.title)
+        div.input-container.super-wide
+            label(for="intro").form-label Artist
+            input(type="text" name="artist" id="artist" required=true placeholder="Song Artist" value=article.artist)
+        div.input-container.super-wide
+            label(for="image_url").form-label Image Url
+            input(type="text" name="image_url" id="image_url" required=true value=article.image_url)
+        div.input-container.wide
+            label(for="lyric").form-label
+            textarea(name="lyric" id="lyric" rows=20 cols=100 placeholder="Insert song lyrics here...") #{article.lyric}
+        a.button(href=cancelUrl) Cancel
+        if(deleteUrl)
+            a.button(href=deleteUrl) Delete
+        button.button.primary(type="submit") #{buttonText}
