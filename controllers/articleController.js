@@ -1,4 +1,4 @@
-const {Article} = require('../models');
+const {Article, Comment, Reply} = require('../models');
 
 module.exports.renderAddForm = function(req, res){
     const article = {
@@ -24,7 +24,22 @@ module.exports.addArticle = async function(req, res){
 
 module.exports.displayArticle = async function(req, res){
     const article = await Article.findByPk(req.params.articleId, {
-        include: ['author']
+        include: [
+            'author',
+            {
+                model: Comment,
+                as: 'comments',
+                required: false,
+                include: [{
+                    model: Reply,
+                    as: 'replies',
+                    required: false
+                }]
+            }
+        ],
+        order: [
+            ['comments', 'commented_on', 'desc']
+        ]
     });
     res.render('articles/view', {article});
 };
@@ -34,4 +49,32 @@ module.exports.displayAll = async function(req, res){
         include: ['author']
     });
     res.render('articles/viewAll', {articles});
+};
+
+module.exports.renderEditForm = async function(req, res){
+    const article = await Article.findByPk(req.params.articleId);
+    res.render('articles/edit', {article});
+};
+
+module.exports.updateArticle = async function(req, res){
+    await Article.update({
+        title: req.body.title,
+        artist: req.body.artist,
+        image_url: req.body.image_url,
+        lyric: req.body.lyric,
+    }, {
+        where: {
+            id: req.params.articleId
+        }
+    });
+    res.redirect(`/article/${req.params.articleId}`);
+};
+
+module.exports.deleteArticle = async function(req, res){
+    await Article.destroy({
+        where: {
+            id: req.params.articleId
+        }
+    });
+    res.redirect('/')
 };
