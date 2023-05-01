@@ -3,7 +3,6 @@ var router = express.Router();
 const articleController = require('../controllers/articleController');
 const commentController = require('../controllers/commentController');
 const userController = require('../controllers/userController');
-
 /* GET home page. */
 router.get('/', function(req, res, next){
   res.redirect('/article');
