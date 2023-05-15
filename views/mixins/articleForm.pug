@@ -13,6 +13,6 @@ mixin articleForm(article, buttonText, saveUrl, cancelUrl, deleteUrl)
             label(for="lyric").form-label
             textarea(name="lyric" id="lyric" rows=20 cols=100 placeholder="Insert song lyrics here...") #{article.lyric}
         a.button(href=cancelUrl) Cancel
-        if(deleteUrl)
+        if(deleteUrl && user && article.isOwnedBy(user))
             a.button(href=deleteUrl) Delete
         button.button.primary(type="submit") #{buttonText}

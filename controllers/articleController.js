@@ -55,7 +55,10 @@ module.exports.renderEditForm = async function(req, res){
     const article = await Article.findByPk(req.params.articleId);
     res.render('articles/edit', {article});
 };
-
+//if (!article.isOwnedBy(user)){
+//         res.redirect('/');
+//         return;
+//     }
 module.exports.updateArticle = async function(req, res){
     await Article.update({
         title: req.body.title,
@@ -69,8 +72,17 @@ module.exports.updateArticle = async function(req, res){
     });
     res.redirect(`/article/${req.params.articleId}`);
 };
-
+//const article = await Article.findByPk(req.params.articleId);
+//     if (!article.isOwnedBy(user)){
+//         res.redirect('/');
+//         return;
+//     }
 module.exports.deleteArticle = async function(req, res){
+    const article = await Article.findByPk(req.params.articleId);
+    if (!user.is('admin') && !article.isOwnedBy(user)){
+        res.redirect('/');
+        return;
+    }
     await Article.destroy({
         where: {
             id: req.params.articleId
